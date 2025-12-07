@@ -188,9 +188,10 @@ const BookingCard = ({ booking, index, renderer }) => {
         <div className="mt-auto">
           {status === 'accepted' && !isExpired ? (
             <Link to={`/dashboard/payment/${booking._id}`}>
-              <button className="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all flex items-center justify-center gap-2">
-                <FaCreditCard /> Pay Now
-              </button>
+              <button className="w-full py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all flex items-center justify-center gap-2 
+    bg-primary-600 hover:bg-primary-700 text-white">
+    <FaCreditCard /> Pay Now
+  </button>
             </Link>
           ) : status === 'paid' ? (
             <button className="w-full py-3 bg-green-500 text-white font-bold rounded-xl cursor-default flex items-center justify-center gap-2 opacity-80">

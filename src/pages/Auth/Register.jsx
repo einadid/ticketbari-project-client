@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   FaUser, 
   FaEnvelope, 
@@ -18,13 +18,14 @@ import {
   FaTrain,
   FaShip,
   FaMapMarkerAlt,
-  FaTicketAlt
+  FaStore
 } from 'react-icons/fa';
 import { Helmet } from 'react-helmet-async';
 import toast from 'react-hot-toast';
 import useAuth from '../../hooks/useAuth';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import useImageUpload from '../../hooks/useImageUpload';
+import Logo from '../../components/shared/Logo';
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -32,6 +33,7 @@ const Register = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(false);
+  const [accountType, setAccountType] = useState('user');
   
   const { createUser, updateUserProfile, googleSignIn } = useAuth();
   const axiosPublic = useAxiosPublic();
@@ -115,13 +117,18 @@ const Register = () => {
         name: data.name,
         email: data.email,
         photo: photoURL,
-        role: 'user',
+        role: accountType,
+        isFraud: false,
         createdAt: new Date().toISOString()
       };
       
       await axiosPublic.post('/users', userInfo);
       
-      toast.success('🎉 Welcome aboard! Registration successful!');
+      const successMessage = accountType === 'vendor' 
+        ? '🎉 Vendor account created successfully! Start adding tickets.' 
+        : '🎉 Welcome aboard! Registration successful!';
+      
+      toast.success(successMessage);
       navigate('/');
     } catch (error) {
       console.error(error);
@@ -141,6 +148,7 @@ const Register = () => {
         email: result.user?.email,
         photo: result.user?.photoURL,
         role: 'user',
+        isFraud: false,
         createdAt: new Date().toISOString()
       };
       
@@ -211,49 +219,37 @@ const Register = () => {
                 transition={{ duration: 0.6 }}
                 className="hidden lg:block"
               >
-                {/* Main Heading */}
-                <div className="mb-8">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="flex items-center gap-3 mb-4"
-                  >
-                    <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-                      <FaTicketAlt className="text-white text-2xl" />
-                    </div>
-                    <div>
-                      <h1 className="text-4xl font-bold text-slate-800 dark:text-white">
-                        TicketBari
-                      </h1>
-                      <p className="text-blue-600 dark:text-blue-400 font-medium">
-                        Your Journey Starts Here
-                      </p>
-                    </div>
-                  </motion.div>
-                  
-                  <motion.h2
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="text-5xl font-bold text-slate-800 dark:text-white leading-tight mb-4"
-                  >
-                    Book Tickets,<br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-                      Travel Anywhere
-                    </span>
-                  </motion.h2>
-                  
-                  <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
-                    className="text-lg text-slate-600 dark:text-slate-300"
-                  >
-                    Join thousands of travelers booking their perfect journeys. 
-                    Bus, Train, Flight & Launch tickets at your fingertips.
-                  </motion.p>
-                </div>
+                {/* Logo */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="mb-8"
+                >
+                  <Logo showSubtitle={true} />
+                </motion.div>
+                
+                <motion.h2
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-5xl font-bold text-slate-800 dark:text-white leading-tight mb-4"
+                >
+                  Book Tickets,<br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+                    Travel Anywhere
+                  </span>
+                </motion.h2>
+                
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-lg text-slate-600 dark:text-slate-300 mb-8"
+                >
+                  Join thousands of travelers booking their perfect journeys. 
+                  Bus, Train, Flight & Launch tickets at your fingertips.
+                </motion.p>
 
                 {/* Feature Cards */}
                 <div className="grid grid-cols-2 gap-4">
@@ -283,29 +279,6 @@ const Register = () => {
                     </motion.div>
                   ))}
                 </div>
-
-                {/* Stats */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.9 }}
-                  className="grid grid-cols-3 gap-4 mt-8"
-                >
-                  {[
-                    { label: 'Happy Travelers', value: '50K+' },
-                    { label: 'Routes Available', value: '500+' },
-                    { label: 'Daily Bookings', value: '1000+' },
-                  ].map((stat, index) => (
-                    <div key={index} className="text-center">
-                      <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                        {stat.value}
-                      </div>
-                      <div className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                        {stat.label}
-                      </div>
-                    </div>
-                  ))}
-                </motion.div>
               </motion.div>
 
               {/* Right Side - Registration Form */}
@@ -317,23 +290,65 @@ const Register = () => {
                 <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 dark:border-slate-700/50 p-8 md:p-10">
                   
                   {/* Mobile Logo */}
-                  <div className="lg:hidden flex items-center justify-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
-                      <FaTicketAlt className="text-white text-xl" />
-                    </div>
-                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white">
-                      TicketBari
-                    </h1>
+                  <div className="lg:hidden flex justify-center mb-6">
+                    <Logo showSubtitle={true} />
                   </div>
 
                   {/* Header */}
-                  <div className="text-center mb-8">
+                  <div className="text-center mb-6">
                     <h2 className="text-3xl font-bold text-slate-800 dark:text-white mb-2">
                       Create Your Account
                     </h2>
                     <p className="text-slate-600 dark:text-slate-400">
                       Start your journey with us today
                     </p>
+                  </div>
+
+                  {/* Account Type Selector */}
+                  <div className="grid grid-cols-2 gap-3 mb-6">
+                    <motion.button
+                      type="button"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setAccountType('user')}
+                      className={`p-4 rounded-xl border-2 transition-all duration-200 ${
+                        accountType === 'user'
+                          ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20'
+                          : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
+                      }`}
+                    >
+                      <FaUser className={`mx-auto text-2xl mb-2 ${
+                        accountType === 'user' ? 'text-blue-600' : 'text-slate-400'
+                      }`} />
+                      <div className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                        User Account
+                      </div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                        Book tickets
+                      </div>
+                    </motion.button>
+
+                    <motion.button
+                      type="button"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setAccountType('vendor')}
+                      className={`p-4 rounded-xl border-2 transition-all duration-200 ${
+                        accountType === 'vendor'
+                          ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20'
+                          : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
+                      }`}
+                    >
+                      <FaStore className={`mx-auto text-2xl mb-2 ${
+                        accountType === 'vendor' ? 'text-indigo-600' : 'text-slate-400'
+                      }`} />
+                      <div className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                        Vendor Account
+                      </div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                        Sell tickets
+                      </div>
+                    </motion.button>
                   </div>
 
                   {/* Google Sign Up */}
@@ -595,7 +610,11 @@ const Register = () => {
                       whileTap={{ scale: 0.98 }}
                       type="submit"
                       disabled={isLoading}
-                      className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-xl shadow-blue-500/30"
+                      className={`w-full py-4 ${
+                        accountType === 'vendor'
+                          ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-purple-500/30'
+                          : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-blue-500/30'
+                      } text-white font-bold rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-xl`}
                     >
                       {isLoading ? (
                         <>
@@ -604,8 +623,10 @@ const Register = () => {
                         </>
                       ) : (
                         <>
-                          <FaTicketAlt />
-                          <span>Start Your Journey</span>
+                          {accountType === 'vendor' ? <FaStore /> : <FaUser />}
+                          <span>
+                            {accountType === 'vendor' ? 'Create Vendor Account' : 'Start Your Journey'}
+                          </span>
                         </>
                       )}
                     </motion.button>

@@ -15,13 +15,13 @@ import {
   FaTrain,
   FaShip,
   FaMapMarkerAlt,
-  FaTicketAlt,
   FaUserShield
 } from 'react-icons/fa';
 import { Helmet } from 'react-helmet-async';
 import toast from 'react-hot-toast';
 import useAuth from '../../hooks/useAuth';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
+import Logo from '../../components/shared/Logo';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -62,6 +62,7 @@ const Login = () => {
         email: result.user?.email,
         photo: result.user?.photoURL,
         role: 'user',
+        isFraud: false,
         createdAt: new Date().toISOString()
       };
       
@@ -131,65 +132,53 @@ const Login = () => {
                 transition={{ duration: 0.6 }}
                 className="hidden lg:block"
               >
-                {/* Main Heading */}
-                <div className="mb-8">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="flex items-center gap-3 mb-4"
-                  >
-                    <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-                      <FaTicketAlt className="text-white text-2xl" />
-                    </div>
-                    <div>
-                      <h1 className="text-4xl font-bold text-slate-800 dark:text-white">
-                        TicketBari
-                      </h1>
-                      <p className="text-blue-600 dark:text-blue-400 font-medium">
-                        Your Journey Starts Here
-                      </p>
-                    </div>
-                  </motion.div>
-                  
-                  <motion.h2
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="text-5xl font-bold text-slate-800 dark:text-white leading-tight mb-4"
-                  >
-                    Welcome Back,<br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-                      Traveler!
-                    </span>
-                  </motion.h2>
-                  
-                  <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
-                    className="text-lg text-slate-600 dark:text-slate-300"
-                  >
-                    Sign in to access your bookings, manage trips, and discover 
-                    new destinations across Bangladesh.
-                  </motion.p>
-                </div>
+                {/* Logo */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="mb-8"
+                >
+                  <Logo showSubtitle={true} />
+                </motion.div>
+                
+                <motion.h2
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-5xl font-bold text-slate-800 dark:text-white leading-tight mb-4"
+                >
+                  Welcome Back,<br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+                    Traveler!
+                  </span>
+                </motion.h2>
+                
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-lg text-slate-600 dark:text-slate-300 mb-8"
+                >
+                  Sign in to access your bookings, manage trips, and discover 
+                  new destinations across Bangladesh.
+                </motion.p>
 
                 {/* Trust Indicators */}
                 <div className="space-y-4">
                   {[
-                    { icon: FaUserShield, title: 'Secure & Trusted', desc: 'Your data is encrypted and protected' },
-                    { icon: FaTicketAlt, title: 'Instant Booking', desc: 'Book tickets in just a few clicks' },
-                    { icon: FaMapMarkerAlt, title: '500+ Routes', desc: 'Travel anywhere in Bangladesh' },
+                    { icon: FaUserShield, title: 'Secure & Trusted', desc: 'Your data is encrypted and protected', color: 'from-green-500 to-emerald-500' },
+                    { icon: FaBus, title: 'Instant Booking', desc: 'Book tickets in just a few clicks', color: 'from-blue-500 to-cyan-500' },
+                    { icon: FaMapMarkerAlt, title: '500+ Routes', desc: 'Travel anywhere in Bangladesh', color: 'from-orange-500 to-red-500' },
                   ].map((item, index) => (
                     <motion.div
                       key={index}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.5 + index * 0.1 }}
-                      className="flex items-start gap-4 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl p-5 rounded-2xl border border-white/20 dark:border-slate-700/50 shadow-lg"
+                      className="flex items-start gap-4 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl p-5 rounded-2xl border border-white/20 dark:border-slate-700/50 shadow-xl"
                     >
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-500/30">
+                      <div className={`w-12 h-12 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg`}>
                         <item.icon className="text-white text-xl" />
                       </div>
                       <div>
@@ -203,29 +192,6 @@ const Login = () => {
                     </motion.div>
                   ))}
                 </div>
-
-                {/* Stats */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.9 }}
-                  className="grid grid-cols-3 gap-4 mt-8 p-6 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/50 shadow-lg"
-                >
-                  {[
-                    { label: 'Active Users', value: '50K+' },
-                    { label: 'Daily Trips', value: '1000+' },
-                    { label: 'Happy Customers', value: '98%' },
-                  ].map((stat, index) => (
-                    <div key={index} className="text-center">
-                      <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                        {stat.value}
-                      </div>
-                      <div className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-                        {stat.label}
-                      </div>
-                    </div>
-                  ))}
-                </motion.div>
               </motion.div>
 
               {/* Right Side - Login Form */}
@@ -237,13 +203,8 @@ const Login = () => {
                 <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 dark:border-slate-700/50 p-8 md:p-10">
                   
                   {/* Mobile Logo */}
-                  <div className="lg:hidden flex items-center justify-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
-                      <FaTicketAlt className="text-white text-xl" />
-                    </div>
-                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white">
-                      TicketBari
-                    </h1>
+                  <div className="lg:hidden flex justify-center mb-6">
+                    <Logo showSubtitle={true} />
                   </div>
 
                   {/* Header */}
@@ -391,7 +352,7 @@ const Login = () => {
                         </>
                       ) : (
                         <>
-                          <FaTicketAlt />
+                          <FaBus />
                           <span>Sign In to Travel</span>
                         </>
                       )}

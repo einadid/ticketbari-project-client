@@ -94,12 +94,13 @@ const SearchBox = () => {
 
             <div className="md:col-span-3">
               <button
-                type="submit"
-                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl hover:scale-[1.02] transition-transform"
-              >
-                <FaSearch />
-                Search
-              </button>
+  type="submit"
+  className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold text-lg hover:scale-[1.02] transition-transform shadow-lg
+    bg-primary-600 hover:bg-primary-700 text-white"
+>
+  <FaSearch />
+  Search Tickets
+</button>
             </div>
           </form>
         </div>
