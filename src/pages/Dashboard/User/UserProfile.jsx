@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { 
@@ -7,17 +9,34 @@ import {
   FaShieldAlt, 
   FaEdit,
   FaCamera,
-  FaCheckCircle
+  FaCheckCircle,
+  FaPhone,
+  FaMapMarkerAlt,
+  FaSpinner
 } from 'react-icons/fa';
+import { format } from 'date-fns';
 import useAuth from '../../../hooks/useAuth';
 import useRole from '../../../hooks/useRole';
-import { format } from 'date-fns';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import EditProfileModal from '../../../components/dashboard/EditProfileModal';
 
 const UserProfile = () => {
   const { user } = useAuth();
   const [role] = useRole();
+  const axiosSecure = useAxiosSecure();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  // Role অনুযায়ী কালার এবং ব্যাকগ্রাউন্ড
+  // Fetch user details from database
+  const { data: userData = {}, isLoading, refetch } = useQuery({
+    queryKey: ['userDetails', user?.email],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users/details/${user.email}`);
+      return res.data;
+    },
+    enabled: !!user?.email
+  });
+
+  // Role অনুযায়ী কালার
   const roleConfig = {
     admin: { 
       badge: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
@@ -38,6 +57,14 @@ const UserProfile = () => {
 
   const config = roleConfig[role] || roleConfig.user;
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <FaSpinner className="animate-spin text-4xl text-primary-600" />
+      </div>
+    );
+  }
+
   return (
     <>
       <Helmet>
@@ -45,18 +72,17 @@ const UserProfile = () => {
       </Helmet>
 
       <div className="max-w-4xl mx-auto">
-        {/* ✅ Welcome Banner - Fixed with Solid Color */}
+        {/* Welcome Banner */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className={`${config.banner} rounded-3xl p-8 mb-8 text-white relative overflow-hidden shadow-lg`}
         >
-          {/* Content */}
           <div className="relative z-10">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-3xl">{config.icon}</span>
               <h1 className="text-2xl md:text-3xl font-bold">
-                Hello, {user?.displayName?.split(' ')[0] || 'User'}!
+                Hello, {userData?.name?.split(' ')[0] || user?.displayName?.split(' ')[0] || 'User'}!
               </h1>
             </div>
             <p className="text-white/90 text-lg">
@@ -64,14 +90,7 @@ const UserProfile = () => {
             </p>
           </div>
           
-          {/* Decorative Pattern */}
-          <div className="absolute top-0 right-0 w-64 h-64 opacity-10">
-            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-              <path fill="white" d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,79.6,-45.8C87.4,-32.6,90,-16.3,88.5,-0.9C87,14.6,81.4,29.2,74.1,43.2C66.7,57.2,57.6,70.6,45,78.5C32.4,86.4,16.2,88.7,0.5,87.9C-15.3,87,-30.5,83,-43.8,75.4C-57.1,67.8,-68.4,56.5,-76.5,43.1C-84.6,29.6,-89.5,14.8,-89.1,0.3C-88.6,-14.3,-82.8,-28.5,-74.7,-41.3C-66.5,-54.1,-56,-65.4,-43.2,-73.4C-30.4,-81.4,-15.2,-86.1,0.4,-86.8C16,-87.5,32,-83.6,44.7,-76.4Z" transform="translate(100 100)" />
-            </svg>
-          </div>
-
-          {/* Decorative Circles */}
+          {/* Decorative */}
           <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
           <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-black/10 rounded-full blur-xl"></div>
         </motion.div>
@@ -89,18 +108,15 @@ const UserProfile = () => {
               {/* Profile Image */}
               <div className="relative w-28 h-28 mx-auto mb-4">
                 <img
-                  src={user?.photoURL || 'https://i.ibb.co/5GzXkwq/user.png'}
+                  src={userData?.photo || user?.photoURL || 'https://i.ibb.co/5GzXkwq/user.png'}
                   alt="Profile"
                   className="w-full h-full rounded-full object-cover border-4 border-slate-100 dark:border-slate-700 shadow-md"
                 />
-                <button className="absolute bottom-1 right-1 p-2 bg-primary-600 text-white rounded-full shadow-md hover:bg-primary-700 transition-colors">
-                  <FaCamera size={12} />
-                </button>
               </div>
 
               {/* Name & Email */}
               <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-1">
-                {user?.displayName || 'User'}
+                {userData?.name || user?.displayName || 'User'}
               </h2>
               <p className="text-slate-500 dark:text-slate-400 text-sm mb-4">
                 {user?.email}
@@ -142,7 +158,11 @@ const UserProfile = () => {
                 <h3 className="text-xl font-bold text-slate-800 dark:text-white">
                   Personal Information
                 </h3>
-                <button className="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium text-sm transition-colors">
+                {/* ✅ Edit Profile Button */}
+                <button 
+                  onClick={() => setIsEditModalOpen(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-xl hover:bg-primary-100 dark:hover:bg-primary-900/50 font-medium text-sm transition-colors"
+                >
                   <FaEdit size={14} /> Edit Profile
                 </button>
               </div>
@@ -152,7 +172,7 @@ const UserProfile = () => {
                 <InfoItem 
                   icon={FaUser} 
                   label="Full Name" 
-                  value={user?.displayName} 
+                  value={userData?.name || user?.displayName} 
                 />
                 <InfoItem 
                   icon={FaEnvelope} 
@@ -160,10 +180,20 @@ const UserProfile = () => {
                   value={user?.email} 
                 />
                 <InfoItem 
+                  icon={FaPhone} 
+                  label="Phone Number" 
+                  value={userData?.phone || 'Not set'} 
+                />
+                <InfoItem 
                   icon={FaShieldAlt} 
                   label="Account Role" 
                   value={role} 
                   isCapital 
+                />
+                <InfoItem 
+                  icon={FaMapMarkerAlt} 
+                  label="Address" 
+                  value={userData?.address || 'Not set'} 
                 />
                 <InfoItem 
                   icon={FaCalendarAlt} 
@@ -193,6 +223,14 @@ const UserProfile = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* ✅ Edit Profile Modal */}
+      <EditProfileModal 
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        userData={userData}
+        refetch={refetch}
+      />
     </>
   );
 };
