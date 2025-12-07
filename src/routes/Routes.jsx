@@ -16,34 +16,33 @@ import PrivateRoute from './PrivateRoute';
 // Dashboard – Common
 import Payment from '../pages/Dashboard/Payment/Payment';
 
-// User Dashboard
+// ---------------- USER DASHBOARD ----------------
 import UserProfile from '../pages/Dashboard/User/UserProfile';
 import MyBookedTickets from '../pages/Dashboard/User/MyBookedTickets';
 import TransactionHistory from '../pages/Dashboard/User/TransactionHistory';
 
-// Vendor Dashboard
+// ---------------- VENDOR DASHBOARD ----------------
 import VendorProfile from '../pages/Dashboard/Vendor/VendorProfile';
 import AddTicket from '../pages/Dashboard/Vendor/AddTicket';
 import MyAddedTickets from '../pages/Dashboard/Vendor/MyAddedTickets';
 import RequestedBookings from '../pages/Dashboard/Vendor/RequestedBookings';
 import RevenueOverview from '../pages/Dashboard/Vendor/RevenueOverview';
 
-// Admin Dashboard
+// ---------------- ADMIN DASHBOARD ----------------
 import AdminProfile from '../pages/Dashboard/Admin/AdminProfile';
 import ManageTickets from '../pages/Dashboard/Admin/ManageTickets';
 import ManageUsers from '../pages/Dashboard/Admin/ManageUsers';
 import AdvertiseTickets from '../pages/Dashboard/Admin/AdvertiseTickets';
 
 const router = createBrowserRouter([
+  // ================= PUBLIC ROUTES =================
   {
     path: '/',
     element: <MainLayout />,
     errorElement: <ErrorPage />,
     children: [
-      {
-        index: true,
-        element: <Home />
-      },
+      { index: true, element: <Home /> },
+
       {
         path: 'all-tickets',
         element: (
@@ -52,6 +51,7 @@ const router = createBrowserRouter([
           </PrivateRoute>
         )
       },
+
       {
         path: 'ticket/:id',
         element: (
@@ -60,18 +60,13 @@ const router = createBrowserRouter([
           </PrivateRoute>
         )
       },
-      {
-        path: 'login',
-        element: <Login />
-      },
-      {
-        path: 'register',
-        element: <Register />
-      }
+
+      { path: 'login', element: <Login /> },
+      { path: 'register', element: <Register /> }
     ]
   },
 
-  // ================= DASHBOARD =================
+  // ================= DASHBOARD ROUTES =================
   {
     path: '/dashboard',
     element: (
@@ -81,13 +76,10 @@ const router = createBrowserRouter([
     ),
     errorElement: <ErrorPage />,
     children: [
-      // Default Dashboard Page
-      {
-        index: true,
-        element: <UserProfile />
-      },
+      // ✅ Default Dashboard (User Profile)
+      { index: true, element: <UserProfile /> },
 
-      // ✅ PAYMENT ROUTE (ADDED)
+      // ✅ PAYMENT ROUTE
       {
         path: 'payment/:id',
         element: <Payment />,
@@ -102,59 +94,23 @@ const router = createBrowserRouter([
           )
       },
 
-      // ---------- User Routes ----------
-      {
-        path: 'profile',
-        element: <UserProfile />
-      },
-      {
-        path: 'my-booked-tickets',
-        element: <MyBookedTickets />
-      },
-      {
-        path: 'transaction-history',
-        element: <TransactionHistory />
-      },
+      // ---------------- USER ROUTES ----------------
+      { path: 'profile', element: <UserProfile /> },
+      { path: 'my-booked-tickets', element: <MyBookedTickets /> },
+      { path: 'transaction-history', element: <TransactionHistory /> },
 
-      // ---------- Vendor Routes ----------
-      {
-        path: 'vendor-profile',
-        element: <VendorProfile />
-      },
-      {
-        path: 'add-ticket',
-        element: <AddTicket />
-      },
-      {
-        path: 'my-added-tickets',
-        element: <MyAddedTickets />
-      },
-      {
-        path: 'requested-bookings',
-        element: <RequestedBookings />
-      },
-      {
-        path: 'revenue-overview',
-        element: <RevenueOverview />
-      },
+      // ---------------- VENDOR ROUTES ----------------
+      { path: 'vendor-profile', element: <VendorProfile /> },
+      { path: 'add-ticket', element: <AddTicket /> },
+      { path: 'my-added-tickets', element: <MyAddedTickets /> },
+      { path: 'requested-bookings', element: <RequestedBookings /> },
+      { path: 'revenue-overview', element: <RevenueOverview /> },
 
-      // ---------- Admin Routes ----------
-      {
-        path: 'admin-profile',
-        element: <AdminProfile />
-      },
-      {
-        path: 'manage-tickets',
-        element: <ManageTickets />
-      },
-      {
-        path: 'manage-users',
-        element: <ManageUsers />
-      },
-      {
-        path: 'advertise-tickets',
-        element: <AdvertiseTickets />
-      }
+      // ---------------- ADMIN ROUTES ----------------
+      { path: 'admin-profile', element: <AdminProfile /> },
+      { path: 'manage-tickets', element: <ManageTickets /> },
+      { path: 'manage-users', element: <ManageUsers /> },
+      { path: 'advertise-tickets', element: <AdvertiseTickets /> }
     ]
   }
 ]);

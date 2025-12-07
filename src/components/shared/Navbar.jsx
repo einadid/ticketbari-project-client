@@ -9,7 +9,8 @@ import {
   FaSun, 
   FaMoon,
   FaSignOutAlt,
-  FaTachometerAlt
+  FaTachometerAlt,
+  FaChevronDown
 } from 'react-icons/fa';
 import useAuth from '../../hooks/useAuth';
 import { useTheme } from '../../contexts/ThemeProvider';
@@ -22,16 +23,12 @@ const Navbar = () => {
   const { user, logOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
-  // Handle scroll effect
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Handle logout
   const handleLogout = async () => {
     try {
       await logOut();
@@ -41,59 +38,49 @@ const Navbar = () => {
     }
   };
 
-  // Navigation links
   const navLinks = [
     { to: '/', label: 'Home' },
     { to: '/all-tickets', label: 'All Tickets', private: true },
     { to: '/dashboard', label: 'Dashboard', private: true }
   ];
 
-  // Active link style
-  const activeStyle = "text-primary font-semibold";
-  const normalStyle = "text-gray-700 dark:text-gray-200 hover:text-primary transition-colors";
-
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
+    <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-lg' 
+          ? 'bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-soft border-b border-slate-200 dark:border-slate-800' 
           : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
+          
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <motion.div
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.5 }}
-              className="w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-xl flex items-center justify-center"
-            >
-              <FaBus className="text-white text-xl" />
-            </motion.div>
+          <Link to="/" className="flex items-center gap-3">
+            <div className="w-11 h-11 bg-primary-600 rounded-xl flex items-center justify-center shadow-sm">
+              <FaBus className="text-white text-lg" />
+            </div>
             <div>
-              <h1 className="text-2xl font-bold">
-                <span className="text-primary">Ticket</span>
-                <span className="text-secondary">Bari</span>
+              <h1 className="text-xl font-bold text-slate-800 dark:text-white">
+                Ticket<span className="text-primary-600">Bari</span>
               </h1>
-              <p className="text-xs text-gray-500 dark:text-gray-400 -mt-1">
-                Book Your Journey
-              </p>
             </div>
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
               (!link.private || user) && (
                 <NavLink
                   key={link.to}
                   to={link.to}
-                  className={({ isActive }) => 
-                    `${isActive ? activeStyle : normalStyle} text-lg font-medium`
-                  }
+                  className={({ isActive }) => `
+                    px-4 py-2 rounded-lg font-medium text-sm transition-colors
+                    ${isActive 
+                      ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400' 
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    }
+                  `}
                 >
                   {link.label}
                 </NavLink>
@@ -101,80 +88,78 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Right Side */}
-          <div className="hidden md:flex items-center gap-4">
+          {/* Right Side Actions */}
+          <div className="hidden md:flex items-center gap-3">
             {/* Theme Toggle */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+            <button
               onClick={toggleTheme}
-              className="p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200"
+              className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
             >
-              {theme === 'dark' ? <FaSun className="text-xl" /> : <FaMoon className="text-xl" />}
-            </motion.button>
+              {theme === 'dark' ? <FaSun className="text-lg" /> : <FaMoon className="text-lg" />}
+            </button>
 
             {user ? (
               /* User Dropdown */
               <div className="relative">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
+                <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="flex items-center gap-3 bg-gray-100 dark:bg-gray-800 rounded-full p-1 pr-4"
+                  className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                 >
                   <img
                     src={user.photoURL || 'https://i.ibb.co/5GzXkwq/user.png'}
                     alt={user.displayName}
-                    className="w-10 h-10 rounded-full object-cover border-2 border-primary"
+                    className="w-9 h-9 rounded-full object-cover border-2 border-white dark:border-slate-700"
                   />
-                  <span className="font-medium text-gray-700 dark:text-gray-200">
-                    {user.displayName?.split(' ')[0] || 'User'}
+                  <span className="font-medium text-sm text-slate-700 dark:text-slate-200">
+                    {user.displayName?.split(' ')[0]}
                   </span>
-                </motion.button>
+                  <FaChevronDown className={`text-xs text-slate-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
 
                 {/* Dropdown Menu */}
                 <AnimatePresence>
                   {isDropdownOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      initial={{ opacity: 0, y: 8, scale: 0.96 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700"
+                      exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 rounded-xl shadow-elevated border border-slate-200 dark:border-slate-700 overflow-hidden"
                     >
-                      <div className="px-4 py-3 bg-gradient-to-r from-primary/10 to-secondary/10">
-                        <p className="font-semibold text-gray-800 dark:text-white">
+                      <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700">
+                        <p className="font-semibold text-slate-800 dark:text-white text-sm">
                           {user.displayName}
                         </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                          {user.email}
-                        </p>
+                        <p className="text-xs text-slate-500 truncate">{user.email}</p>
                       </div>
-                      <div className="py-2">
+                      <div className="py-1">
                         <Link
                           to="/dashboard/profile"
                           onClick={() => setIsDropdownOpen(false)}
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
                         >
-                          <FaUser className="text-primary" />
-                          <span className="text-gray-700 dark:text-gray-200">My Profile</span>
+                          <FaUser className="text-slate-400" />
+                          My Profile
                         </Link>
                         <Link
                           to="/dashboard"
                           onClick={() => setIsDropdownOpen(false)}
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
                         >
-                          <FaTachometerAlt className="text-secondary" />
-                          <span className="text-gray-700 dark:text-gray-200">Dashboard</span>
+                          <FaTachometerAlt className="text-slate-400" />
+                          Dashboard
                         </Link>
-                        <hr className="my-2 border-gray-100 dark:border-gray-700" />
+                      </div>
+                      <div className="border-t border-slate-100 dark:border-slate-700 py-1">
                         <button
                           onClick={() => {
                             handleLogout();
                             setIsDropdownOpen(false);
                           }}
-                          className="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-red-500"
+                          className="flex items-center gap-3 px-4 py-2.5 w-full text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                         >
                           <FaSignOutAlt />
-                          <span>Logout</span>
+                          Logout
                         </button>
                       </div>
                     </motion.div>
@@ -182,46 +167,33 @@ const Navbar = () => {
                 </AnimatePresence>
               </div>
             ) : (
-              /* Login/Register Buttons */
-              <div className="flex items-center gap-3">
+              /* Login/Register */
+              <div className="flex items-center gap-2">
                 <Link to="/login">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-6 py-2.5 rounded-xl border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-all"
-                  >
+                  <button className="px-5 py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
                     Login
-                  </motion.button>
+                  </button>
                 </Link>
                 <Link to="/register">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="btn-primary-custom"
-                  >
+                  <button className="px-5 py-2.5 text-sm font-semibold bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors shadow-sm">
                     Register
-                  </motion.button>
+                  </button>
                 </Link>
               </div>
             )}
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-3">
-            <motion.button
-              whileTap={{ scale: 0.9 }}
-              onClick={toggleTheme}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800"
-            >
+          <div className="md:hidden flex items-center gap-2">
+            <button onClick={toggleTheme} className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800">
               {theme === 'dark' ? <FaSun /> : <FaMoon />}
-            </motion.button>
-            <motion.button
-              whileTap={{ scale: 0.9 }}
+            </button>
+            <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800"
+              className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800"
             >
-              {isOpen ? <FaTimes className="text-xl" /> : <FaBars className="text-xl" />}
-            </motion.button>
+              {isOpen ? <FaTimes /> : <FaBars />}
+            </button>
           </div>
         </div>
       </div>
@@ -233,66 +205,46 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white dark:bg-gray-900 border-t dark:border-gray-800"
+            className="md:hidden bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800"
           >
-            <div className="px-4 py-6 space-y-4">
+            <div className="px-4 py-4 space-y-2">
               {navLinks.map((link) => (
                 (!link.private || user) && (
                   <NavLink
                     key={link.to}
                     to={link.to}
                     onClick={() => setIsOpen(false)}
-                    className={({ isActive }) =>
-                      `block py-3 px-4 rounded-xl ${
-                        isActive
-                          ? 'bg-primary/10 text-primary font-semibold'
-                          : 'text-gray-700 dark:text-gray-200'
-                      }`
-                    }
+                    className={({ isActive }) => `
+                      block px-4 py-3 rounded-xl font-medium
+                      ${isActive 
+                        ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30' 
+                        : 'text-slate-600 dark:text-slate-300'
+                      }
+                    `}
                   >
                     {link.label}
                   </NavLink>
                 )
               ))}
-
+              
               {user ? (
-                <div className="pt-4 border-t dark:border-gray-800">
-                  <div className="flex items-center gap-3 mb-4">
-                    <img
-                      src={user.photoURL || 'https://i.ibb.co/5GzXkwq/user.png'}
-                      alt={user.displayName}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-primary"
-                    />
-                    <div>
-                      <p className="font-semibold dark:text-white">{user.displayName}</p>
-                      <p className="text-sm text-gray-500">{user.email}</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setIsOpen(false);
-                    }}
-                    className="w-full py-3 bg-red-500 text-white rounded-xl font-semibold"
-                  >
-                    Logout
-                  </button>
-                </div>
+                <button
+                  onClick={() => { handleLogout(); setIsOpen(false); }}
+                  className="w-full px-4 py-3 text-left text-red-600 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20"
+                >
+                  Logout
+                </button>
               ) : (
-                <div className="pt-4 border-t dark:border-gray-800 space-y-3">
-                  <Link
-                    to="/login"
-                    onClick={() => setIsOpen(false)}
-                    className="block w-full py-3 text-center border-2 border-primary text-primary rounded-xl font-semibold"
-                  >
-                    Login
+                <div className="pt-2 space-y-2">
+                  <Link to="/login" onClick={() => setIsOpen(false)}>
+                    <button className="w-full py-3 border-2 border-primary-600 text-primary-600 rounded-xl font-semibold">
+                      Login
+                    </button>
                   </Link>
-                  <Link
-                    to="/register"
-                    onClick={() => setIsOpen(false)}
-                    className="block w-full py-3 text-center bg-primary text-white rounded-xl font-semibold"
-                  >
-                    Register
+                  <Link to="/register" onClick={() => setIsOpen(false)}>
+                    <button className="w-full py-3 bg-primary-600 text-white rounded-xl font-semibold">
+                      Register
+                    </button>
                   </Link>
                 </div>
               )}
@@ -300,7 +252,7 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </nav>
   );
 };
 
