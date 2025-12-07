@@ -1,13 +1,20 @@
 import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import DashboardLayout from '../layouts/DashboardLayout';
+
+// Public Pages
 import Home from '../pages/Home/Home';
 import AllTickets from '../pages/AllTickets/AllTickets';
 import TicketDetails from '../pages/TicketDetails/TicketDetails';
 import Login from '../pages/Auth/Login';
 import Register from '../pages/Auth/Register';
 import ErrorPage from '../pages/ErrorPage';
+
+// Route Guard
 import PrivateRoute from './PrivateRoute';
+
+// Dashboard – Common
+import Payment from '../pages/Dashboard/Payment/Payment';
 
 // User Dashboard
 import UserProfile from '../pages/Dashboard/User/UserProfile';
@@ -39,11 +46,19 @@ const router = createBrowserRouter([
       },
       {
         path: 'all-tickets',
-        element: <PrivateRoute><AllTickets /></PrivateRoute>
+        element: (
+          <PrivateRoute>
+            <AllTickets />
+          </PrivateRoute>
+        )
       },
       {
         path: 'ticket/:id',
-        element: <PrivateRoute><TicketDetails /></PrivateRoute>
+        element: (
+          <PrivateRoute>
+            <TicketDetails />
+          </PrivateRoute>
+        )
       },
       {
         path: 'login',
@@ -55,17 +70,39 @@ const router = createBrowserRouter([
       }
     ]
   },
+
+  // ================= DASHBOARD =================
   {
     path: '/dashboard',
-    element: <PrivateRoute><DashboardLayout /></PrivateRoute>,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
     errorElement: <ErrorPage />,
     children: [
-      // Default redirect
+      // Default Dashboard Page
       {
         index: true,
         element: <UserProfile />
       },
-      // User Routes
+
+      // ✅ PAYMENT ROUTE (ADDED)
+      {
+        path: 'payment/:id',
+        element: <Payment />,
+        loader: ({ params }) =>
+          fetch(
+            `${import.meta.env.VITE_API_URL}/bookings/${params.id}`,
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem('access-token')}`
+              }
+            }
+          )
+      },
+
+      // ---------- User Routes ----------
       {
         path: 'profile',
         element: <UserProfile />
@@ -78,7 +115,8 @@ const router = createBrowserRouter([
         path: 'transaction-history',
         element: <TransactionHistory />
       },
-      // Vendor Routes
+
+      // ---------- Vendor Routes ----------
       {
         path: 'vendor-profile',
         element: <VendorProfile />
@@ -99,7 +137,8 @@ const router = createBrowserRouter([
         path: 'revenue-overview',
         element: <RevenueOverview />
       },
-      // Admin Routes
+
+      // ---------- Admin Routes ----------
       {
         path: 'admin-profile',
         element: <AdminProfile />
