@@ -1,21 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom';
-
-// Layouts
 import MainLayout from '../layouts/MainLayout';
 import DashboardLayout from '../layouts/DashboardLayout';
-
-// Public Pages
 import Home from '../pages/Home/Home';
 import AllTickets from '../pages/AllTickets/AllTickets';
 import TicketDetails from '../pages/TicketDetails/TicketDetails';
 import Login from '../pages/Auth/Login';
 import Register from '../pages/Auth/Register';
 import ErrorPage from '../pages/ErrorPage';
-
-// Private Route
 import PrivateRoute from './PrivateRoute';
-import AdminRoute from './AdminRoute';
-import VendorRoute from './VendorRoute';
 
 // User Dashboard
 import UserProfile from '../pages/Dashboard/User/UserProfile';
@@ -68,6 +60,11 @@ const router = createBrowserRouter([
     element: <PrivateRoute><DashboardLayout /></PrivateRoute>,
     errorElement: <ErrorPage />,
     children: [
+      // Default redirect
+      {
+        index: true,
+        element: <UserProfile />
+      },
       // User Routes
       {
         path: 'profile',
@@ -81,45 +78,43 @@ const router = createBrowserRouter([
         path: 'transaction-history',
         element: <TransactionHistory />
       },
-      
       // Vendor Routes
       {
         path: 'vendor-profile',
-        element: <VendorRoute><VendorProfile /></VendorRoute>
+        element: <VendorProfile />
       },
       {
         path: 'add-ticket',
-        element: <VendorRoute><AddTicket /></VendorRoute>
+        element: <AddTicket />
       },
       {
         path: 'my-added-tickets',
-        element: <VendorRoute><MyAddedTickets /></VendorRoute>
+        element: <MyAddedTickets />
       },
       {
         path: 'requested-bookings',
-        element: <VendorRoute><RequestedBookings /></VendorRoute>
+        element: <RequestedBookings />
       },
       {
         path: 'revenue-overview',
-        element: <VendorRoute><RevenueOverview /></VendorRoute>
+        element: <RevenueOverview />
       },
-      
       // Admin Routes
       {
         path: 'admin-profile',
-        element: <AdminRoute><AdminProfile /></AdminRoute>
+        element: <AdminProfile />
       },
       {
         path: 'manage-tickets',
-        element: <AdminRoute><ManageTickets /></AdminRoute>
+        element: <ManageTickets />
       },
       {
         path: 'manage-users',
-        element: <AdminRoute><ManageUsers /></AdminRoute>
+        element: <ManageUsers />
       },
       {
         path: 'advertise-tickets',
-        element: <AdminRoute><AdvertiseTickets /></AdminRoute>
+        element: <AdvertiseTickets />
       }
     ]
   }

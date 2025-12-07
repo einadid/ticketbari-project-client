@@ -7,7 +7,9 @@ import { HelmetProvider } from 'react-helmet-async';
 import AuthProvider from './contexts/AuthProvider';
 import { ThemeProvider } from './contexts/ThemeProvider';
 import router from './routes/Routes';
-import './index.css';
+
+// 👇 এই লাইনটি মাস্ট থাকতে হবে!
+import './index.css'; 
 
 const queryClient = new QueryClient();
 

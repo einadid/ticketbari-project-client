@@ -1,11 +1,11 @@
 import { Helmet } from 'react-helmet-async';
 import HeroBanner from '../../components/home/HeroBanner';
+import SearchBox from '../../components/home/SearchBox';
+import Stats from '../../components/home/Stats';
 import AdvertisedTickets from '../../components/home/AdvertisedTickets';
 import LatestTickets from '../../components/home/LatestTickets';
 import PopularRoutes from '../../components/home/PopularRoutes';
 import WhyChooseUs from '../../components/home/WhyChooseUs';
-import SearchBox from '../../components/home/SearchBox';
-import Stats from '../../components/home/Stats';
 
 const Home = () => {
   return (
@@ -15,16 +15,16 @@ const Home = () => {
       </Helmet>
 
       <div className="overflow-hidden">
-        {/* Hero Banner with Slider */}
+        {/* Hero Banner */}
         <HeroBanner />
 
         {/* Search Box */}
         <SearchBox />
 
-        {/* Stats Section */}
+        {/* Stats */}
         <Stats />
 
-        {/* Advertised Tickets */}
+        {/* Advertised Tickets - Server থেকে data আসলে দেখাবে */}
         <AdvertisedTickets />
 
         {/* Latest Tickets */}

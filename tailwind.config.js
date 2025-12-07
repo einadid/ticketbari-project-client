@@ -16,7 +16,6 @@ export default {
       },
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
-        bangla: ['Hind Siliguri', 'sans-serif'],
       }
     },
   },

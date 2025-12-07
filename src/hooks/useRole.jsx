@@ -6,12 +6,17 @@ const useRole = () => {
   const { user, loading } = useAuth();
   const axiosSecure = useAxiosSecure();
 
-  const { data: role = '', isLoading: isRoleLoading } = useQuery({
+  const { data: role = 'user', isLoading: isRoleLoading } = useQuery({
     queryKey: ['role', user?.email],
     enabled: !loading && !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/users/role/${user.email}`);
-      return res.data.role;
+      try {
+        const res = await axiosSecure.get(`/users/role/${user.email}`);
+        return res.data.role;
+      } catch (error) {
+        console.error('Error fetching role:', error);
+        return 'user';
+      }
     }
   });
 
