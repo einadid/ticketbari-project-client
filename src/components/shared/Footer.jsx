@@ -24,7 +24,6 @@ import {
   FaGooglePlay,
   FaApple
 } from 'react-icons/fa';
-import Logo from './Logo';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -72,6 +71,43 @@ const Footer = () => {
     { Icon: FaShip, delay: 15, duration: 26, x: '80%', y: '70%', size: 'text-4xl md:text-6xl' },
     { Icon: FaTicketAlt, delay: 3, duration: 24, x: '45%', y: '35%', size: 'text-3xl md:text-5xl' },
   ];
+
+  // Footer Logo Component (inline)
+  const FooterLogo = () => (
+    <Link to="/" className="flex items-center gap-3 group">
+      {/* Animated Icon Container */}
+      <motion.div
+        className="relative w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl shadow-lg shadow-blue-500/40"
+          animate={{
+            rotate: [0, 5, -5, 0],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <div className="relative z-10 text-white">
+          <FaBus className="text-xl sm:text-2xl" />
+        </div>
+      </motion.div>
+
+      {/* Text Logo - Fixed for dark background */}
+      <div className="flex flex-col -space-y-1">
+        <span className="text-xl sm:text-2xl font-bold tracking-tight text-white group-hover:text-blue-300 transition-colors">
+          Ticket<span className="text-blue-400">Bari</span>
+        </span>
+        <span className="text-[9px] sm:text-[10px] font-semibold text-gray-400 tracking-widest uppercase">
+          Book Your Journey
+        </span>
+      </div>
+    </Link>
+  );
 
   return (
     <footer className="relative bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-gray-300 overflow-hidden">
@@ -121,14 +157,16 @@ const Footer = () => {
         
         {/* Top Section - Logo & Newsletter */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 mb-12 pb-12 border-b border-white/10">
-          {/* Logo & Description */}
+          {/* Logo & Description - Using inline FooterLogo */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="max-w-md"
           >
-            <Logo size="lg" variant="light" />
+            {/* Footer Logo */}
+            <FooterLogo />
+            
             <p className="mt-4 text-gray-400 text-sm sm:text-base leading-relaxed">
               🚌 Your trusted travel partner for seamless journey booking. 
               Book bus, train, launch & flight tickets easily across Bangladesh.
@@ -391,7 +429,7 @@ const Footer = () => {
           </motion.div>
         </div>
 
-        {/* Trust Badges - Scrollable on mobile */}
+        {/* Trust Badges */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -430,7 +468,8 @@ const Footer = () => {
             >
               <span className="text-lg sm:text-xl">🎫</span>
               <span>© {currentYear}</span>
-              <span className="text-blue-400 font-bold">TicketBari</span>
+              <span className="text-white font-bold">Ticket</span>
+              <span className="text-blue-400 font-bold">Bari</span>
               <span className="hidden xs:inline">. All rights reserved.</span>
               <span className="hidden md:inline text-gray-500">| Made with ❤️ in Bangladesh</span>
             </motion.p>
