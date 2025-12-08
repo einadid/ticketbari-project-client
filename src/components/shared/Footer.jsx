@@ -471,7 +471,7 @@ const Footer = () => {
               <span className="text-white font-bold">Ticket</span>
               <span className="text-blue-400 font-bold">Bari</span>
               <span className="hidden xs:inline">. All rights reserved.</span>
-              <span className="hidden md:inline text-gray-500">| Made with ❤️ in Bangladesh</span>
+              <span className="hidden md:inline text-gray-500">| Made with <b> <a className=" text-white" href="https://github.com/einadid">einadid</a></b></span>
             </motion.p>
             
             <div className="flex items-center gap-4 sm:gap-6">

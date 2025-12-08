@@ -136,7 +136,7 @@ const PopularRoutes = () => {
 
                     {/* Price & Duration */}
                     <div className="flex items-center justify-between">
-                      <span className="text-primary font-bold text-lg">{route.price}</span>
+                      <span className="text-primary text-white/80 font-bold text-lg">{route.price}</span>
                       <span className="text-white/80 text-sm">{route.duration}</span>
                     </div>
                   </div>

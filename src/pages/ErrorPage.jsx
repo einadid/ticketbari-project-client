@@ -68,10 +68,19 @@ const ErrorPage = () => {
             <span>Go Back</span>
           </button>
           <Link to="/">
-            <button className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all">
-              <FaHome />
-              <span>Back to Home</span>
-            </button>
+            <button
+  className="
+    flex items-center justify-center gap-2 px-6 py-3
+    font-semibold rounded-xl shadow-lg
+    transition-all hover:shadow-xl
+
+    bg-gray-600 hover:bg-primary-700 text-white
+  "
+>
+  <FaHome />
+  <span>Back to Home</span>
+</button>
+
           </Link>
         </motion.div>
       </div>
