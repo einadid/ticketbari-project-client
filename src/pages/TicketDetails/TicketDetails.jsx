@@ -205,12 +205,25 @@ const TicketDetails = () => {
                       </div>
 
                       <button
-                        onClick={() => setIsModalOpen(true)}
-                        disabled={isExpired || isSoldOut || ticketQuantity === 0}
-                        className="w-full py-4 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {isExpired ? 'Expired' : isSoldOut ? 'Sold Out' : 'Book Now'}
-                      </button>
+  onClick={() => setIsModalOpen(true)}
+  disabled={isExpired || isSoldOut || ticketQuantity === 0}
+  className="
+    w-full py-4 font-bold rounded-xl shadow-lg transition-all transform hover:scale-[1.02]
+    
+    /* Light Mode */
+    bg-primary text-white hover:shadow-xl
+
+    /* Dark Mode */
+    dark:bg-gradient-to-r dark:from-primary dark:to-secondary
+    dark:text-white
+
+    /* Disabled */
+    disabled:opacity-50 disabled:cursor-not-allowed
+  "
+>
+  {isExpired ? 'Expired' : isSoldOut ? 'Sold Out' : 'Book Now'}
+</button>
+
                     </div>
                   </div>
                 </div>
