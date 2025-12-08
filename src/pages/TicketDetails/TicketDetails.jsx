@@ -208,16 +208,13 @@ const TicketDetails = () => {
   onClick={() => setIsModalOpen(true)}
   disabled={isExpired || isSoldOut || ticketQuantity === 0}
   className="
-    w-full py-4 font-bold rounded-xl shadow-lg transition-all transform hover:scale-[1.02]
-    
-    /* Light Mode */
-    bg-primary text-white hover:shadow-xl
+    w-full py-4 rounded-xl font-bold shadow-lg
+    transition-all transform hover:scale-[1.02]
 
-    /* Dark Mode */
-    dark:bg-gradient-to-r dark:from-primary dark:to-secondary
-    dark:text-white
+    /* Light + Dark safe */
+    bg-primary-600 hover:bg-primary-700 text-white
 
-    /* Disabled */
+    /* Disabled state */
     disabled:opacity-50 disabled:cursor-not-allowed
   "
 >
@@ -282,11 +279,17 @@ const TicketDetails = () => {
                   Cancel
                 </button>
                 <button
-                  type="submit"
-                  className="flex-1 py-3 bg-primary text-white font-bold rounded-xl hover:bg-orange-600 transition-colors"
-                >
-                  Confirm
-                </button>
+  type="submit"
+  className="
+    flex-1 py-3 rounded-xl font-bold
+    transition-all
+
+    bg-primary-600 hover:bg-primary-700 text-white
+  "
+>
+  Confirm
+</button>
+
               </div>
             </form>
           </motion.div>
